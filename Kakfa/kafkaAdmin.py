@@ -1,10 +1,10 @@
-from kafka.admin import KafkaAdminClient,NewTopic
+import kafka.admin
 
-client = KafkaAdminClient(bootstrap_servers = "localhost:9092")
+client = kafka.admin.KafkaAdminClient(bootstrap_servers ="localhost:9092")
 
 def checkTopic(name):
     topic = []
-    topic.append(NewTopic(name=name, num_partitions=1, replication_factor=1))
+    topic.append(kafka.admin.NewTopic(name=name, num_partitions=1, replication_factor=1))
     if name in client.list_topics():
         print("Topic is Already Present.")
         return True

@@ -1,16 +1,21 @@
 from kafka import KafkaConsumer
-
-TOPIC = "Twitter"
+import json
+from Mongo import  mongo
+TOPIC = "TransformData"
 consumer = {}
-
+client = mongo.mongoConnection()
+db = mongo.createDB("Twitter",client)
+collection = mongo.createCollection("TransformData",db)
 #  connecting to kafka
 print("connecting to kafka")
 try:
     consumer = KafkaConsumer(TOPIC, bootstrap_servers='localhost:9092')
     for event in consumer:
-        print(event)
-except Exception:
-    print("could not connect")
+        msg = event.value.decode('utf-8')
+        tweets = json.loads(msg)
+        collection.insert_one(tweets)
+except Exception as e:
+    print("could not connect",e)
 
 else:
     print("connected")
